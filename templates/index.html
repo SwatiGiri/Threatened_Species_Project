@@ -36,10 +36,17 @@
             dark_blue:'#5da2db',
             dark_green:'#6fb104',
         }
-        if (!mapboxToken) {
-            let response;
-            d3.text("/mapboxkey",(e,r)=>{response=r})
-            const mapboxToken = response;
+        try { mapboxToken }
+        catch(err) {
+            var mapboxToken;
+        }
+        if (!mapboxToken){
+            d3.text("/mapboxkey",(e,r)=>{
+                mapboxToken=r;
+                console.log(r);
+                mapbox = `https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token=${mapboxToken}`;
+                L.tileLayer(mapbox).addTo(myMap);
+            })
         }
     </script>
     <link href="{{ url_for('static',filename='css/map-div.css') }}" rel="stylesheet">
